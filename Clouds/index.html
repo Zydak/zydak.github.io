@@ -297,17 +297,17 @@
                 </p>
 
                 <p>
-                    The problem was that OpenVDB (C++ library for working with VDB files) is not compatible with GPU usage, the grid cannot be accessed from the GPU. So at first I decided to convert the VDB into a 3D texture that can be sampled inside the shader. This works fine for small to medium sized volumes, but for really large volumes this can become a problem due to really high memory usage. A 469MB VDB file ended up being 3140MB when converted to a 3D texture, with 12GB of VRAM in my GPU this means it's manageable but I'd be limited to 3-4 volumes of that size at once.
+                    The problem was that OpenVDB (C++ library for working with VDB files) is not compatible with GPU usage, the grid cannot be accessed from the GPU. So at first I decided to convert the VDB into a 3D texture that can be sampled inside the shader. This works fine for small to medium sized volumes, but for really large volumes this can become a problem due to really high memory usage. A texture is really inefficient way to store density since it's not sparse. A 469MB VDB file ended up being 3140MB when converted to a 3D texture, with 12GB of VRAM in my GPU this means it's manageable but I'd be limited to 3-4 volumes of that size at once.
                 </p>
 
                 <p>
-                    That was less than ideal, so later on I switched to <strong>NanoVDB</strong> which is a GPU implementation of sparse voxel grid. It's a little bit slower (20-30%) since it can't be sampled as fast as a 3D texture, but it uses way less memory, the same 469MB VDB file ended up being only 563MB instead of 3140MB when converted to NanoVDB format, so the trade-off is worth it. The most annoying thing about NanoVDB is it's absolute lack of any documentation, so figuring out how to use it took a lot of trial and error, and I'm still not sure if I'm doing everything correctly.
+                    That was less than ideal, so later on I switched to <strong>NanoVDB</strong> which is a GPU implementation of sparse voxel grid. It's a little bit slower (20-30% based on some testing I've done) since it can't be sampled as fast as a 3D texture, but it uses way less memory, the same 469MB VDB file ended up being only 563MB instead of 3140MB when converted to NanoVDB format, so the trade-off is worth it. The most annoying thing about NanoVDB is it's absolute lack of any documentation, so figuring out how to use it took a lot of trial and error, and I'm still not sure if I'm doing everything correctly.
                 </p>
 
                 <h3>Delta Tracking</h3>
 
                 <p>
-                    Now onto the actual delta tracking implementation. The idea is to fill the volume with fictional null particles so that the medium can be treated as if it's homogeneous with extinction coefficient $\sigma_{t}^{max}$. Free path lengths are then sampled using this majorant coefficient, and when an event occurs, the actual density at that point is evaluated to decide whether the collision is real or not.
+                    Now onto the actual delta tracking implementation. The idea is to fill the volume with fictional null particles so that the medium can be treated as if it's homogeneous with extinction coefficient $\sigma_{t}^{max}$. Think of it as filling all the gaps with invisible null particles, just so that we can act as if the volume is homogeneous, when in reality it's not. Free path lengths are then sampled using this majorant coefficient, and when an event occurs, the actual density at that point is evaluated to decide whether the collision is real or not.
                 </p>
 
                 <p>
@@ -335,7 +335,7 @@
                 </div>
 
                 <p>
-                    Another random number $\xi$ uniformly distributed in [0, 1] is generated. If $\xi < p_{accept}$, the collision is accepted as a real interaction (scattering or absorption), otherwise, it's a null collision and sampling continues for the next free path length from that point. This process is repeated until the ray exits the volume.
+                    Another random number $\xi$ uniformly distributed in [0, 1] is generated. If $\xi < p_{accept}$, the collision is accepted as a real interaction (scattering or absorption), otherwise, it's a null collision and sampling continues for the next free path length from that point, we act as if nothing has ever happened. This process is repeated until the ray exits the volume.
                 </p>
 
                 <p>
@@ -496,7 +496,7 @@
                 </div>
 
                 <p>
-                    On the images above, every time a null collision is sampled, the brightness of that pixel is incremented by a small amount, so the darker the image the better. As you can see, with region subdivision the number of null collisions is massively reduced.
+                    On the images above, every time a null collision is sampled (or the border of the regions is crossed), the brightness of that pixel is incremented by a small amount, so the darker the image the better. As you can see, with region subdivision the number of null collisions is massively reduced.
                 </p>
 
                 <div class="image-comparison">
@@ -511,7 +511,7 @@
                 </div>
 
                 <p>
-                    With subdivision the render time is reduced from 216s to 33s, which is a huge improvement considering it stays completely unbiased and is pretty much free.
+                    With subdivision the render time of the bunny is reduced from 216s to 33s, which is a huge improvement considering it stays completely unbiased and is pretty much free aside from the VRAM needed for the additional grid.
                 </p>
 
                 <p>
