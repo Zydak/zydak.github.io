@@ -554,7 +554,7 @@
                 </div>
 
                 <p>
-                    with $b$ being the bias factor (between 0 and 1). After implementing that, the bias factor was set to 0.8, which seems to work well for clouds. With that the render time is down to 1.1s for 10 samples per pixel! So again, a huge improvement over the initial 248s. The image is also a lot less noisy since now the paths are shorter which means there's less variance.
+                    with $b$ being the bias factor (between 0 and 1). After implementing that, the bias factor was set to 0.8, which seems to work well for clouds. With that the render time is down to 1.1s for 10 samples per pixel! So again, a huge improvement over the initial 248s. The image is also a lot less noisy since now the paths are shorter which means there's less variance. The visual difference is minimal, it might seem like it's brighter but that's mostly because of the reduced noise. Without biasing the there is some very high frequency noise that makes the cloud look darker than it actually is on low sample counts.
                 </p>
 
                 <div class="centered-container column">
@@ -573,7 +573,7 @@
                 
                 <h3>Performance Summary</h3>
                 <p>
-                    Here's a comprehensive breakdown of the performance improvements achieved through various optimizations:
+                    Performance results for the cloud rendering with each optimization step added:
                 </p>
                 
                 <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
@@ -619,7 +619,7 @@
                 </div>
 
                 <p>
-                    Though even with the 225x speedup from biased sampling, the render time for a clean image at 1000 samples per pixel is still around 123s. So high scattering media like clouds still remain pretty computationally expensive.
+                    Though even with the 225x speedup from biased sampling, the render time for a clean image at 1000 samples per pixel is still around 123s. So high scattering media like clouds are still pretty computationally expensive.
                 </p>
 
                 <p>
