@@ -54,7 +54,7 @@
             <section id="brief">
                 <h2>Brief</h2>
                 <p>
-                    This post is a little write up of volumetric rendering in my GPU path tracer. I'll mostly go over the specific algorithms used, problems encountered, and the solutions that I found. But I won't be discussing the full implementation details of the path tracer itself here, like launching a ray, accumulating the radiance, utilizing the GPU, and so on, since it's a huge topic on it's own and I want to keep this as brief as possible. So this assumes you already know the basics of path tracing and will only focus on the volumetric rendering part.
+                    This post is a little write up of volumetric rendering in my GPU path tracer. I'll mostly go over the specific algorithms used, problems encountered, and the solutions that I found. But I won't be discussing the full implementation details of the path tracer itself here, like launching a ray, accumulating the radiance, utilizing the GPU, and so on, since it's a huge topic on it's own and I want to keep this as brief as possible. So this assumes you already know the basics of path tracing and will only focus on the volumetric rendering part. I won't be sharing any code here because it's mostly just math formulas which translate to code directly, and the implementation of the delta tracking is very heavily dependent on the workflow of the path tracer itself, so pasting code snippets without context would just be confusing, and pasting the entire code of the path tracer would be too long. If you're interested in the source code of the path tracer, you can find it on <a href="https://github.com/Zydak/Vulkan-Path-Tracer">GitHub</a>, it's fully open source.
                 </p>
             </section>
 
@@ -101,7 +101,7 @@
                 </p>
 
                 <p>
-                    There are too many particles in a medium to simulate them individually, so a probabilistic approach is used to determine how light interacts with the volume. The key idea is to sample a random distance at which the next interaction (scattering or absorption) occurs based on some probability that's based on the medium's properties. This probability is given by:
+                    As earlier said, there are too many particles in a medium to simulate them individually, so a probabilistic approach has to be used to determine how light interacts with the volume. The idea is to sample a random distance at which the next interaction (scattering or absorption) occurs based on some probability that's based on the medium's properties. This probability is given by:
                 </p>
 
                 <div class="equation">
@@ -111,7 +111,7 @@
                 </div>
 
                 <p>
-                    The distance which light ray travels through the medium before an interaction (scattering or absorption) occurs is called the <strong>free path length</strong>. In tracking, it's sampled based on medium's properties. So basically a random distance value that follows the probability distribution $p(d)$ defined above is needed. This can be done using the inverse transform sampling method. With that the free path length $d$ can be defined as:
+                    The distance $d$ which light ray travels through the medium before an interaction (scattering or absorption) occurs is called the <strong>free path length</strong>, and we want it to be sampled based on the probability $p(d)$. To do that inverse transform sampling can be used and $d$ ends up being defined as:
                 </p>
 
                 <div class="equation">
@@ -187,7 +187,7 @@
                 </div>
 
                 <p>
-                    To sample a new direction based on the Henyey-Greenstein phase function, a random angle between the incident direction $\hat v$ and the outgoing direction $\omega$ is needed. Since we have the probability distribution, just like before, the inverse transform sampling can be used. After doing that with the Henyey-Greenstein phase function, the following formula for the scattering angle $\theta$ is obtained:
+                    To sample a new direction based on the Henyey-Greenstein phase function, a random angle between the incident direction $\hat v$ and the outgoing direction $\omega$ is needed. Since we have the probability distribution, just like before, the inverse transform sampling can be used. After doing that with the Henyey-Greenstein phase function, we get the following formula for the cosine of the scattering angle $\theta$:
                 </p>
 
                 <div class="equation">
@@ -201,7 +201,7 @@
                 </div>
 
                 <p>
-                    Where $\xi$ is a uniformly distributed random number in the range [0, 1]. Since this is only for the polar angle $\theta$, the azimuthal angle $\phi$ also has to be sampled, though this time it can just be sampled uniformly in the range [0, 2$\pi$] since it's assumed to be uniformly distributed around the incident direction:
+                    Where $\xi$ is a uniformly distributed random number in the range [0, 1]. Since this is only for the polar angle $\theta$, the azimuthal angle $\phi$ also has to be sampled, though this time it can just be sampled uniformly in the range [0, 2$\pi$] since the phase function doesn't affect it in any way:
                 </p>
 
                 <div class="equation">
@@ -539,7 +539,7 @@
 
                 <div class="equation">
                     $$
-                    |G|^{1 + d} \cdot \text{sign}(G)
+                    g^\prime = |g|^{1 + d} \cdot \text{sign}(g)
                     $$
                 </div>
 
@@ -632,7 +632,7 @@
                 </div>
 
                 <p>
-                    A lot of the cost can be cut using a denoiser, which I'm not doing here. All of the images here were not denoised in any way. Which means that realistically a lot less samples would be needed for a good looking image.
+                    A lot of the cost can be cut using a denoiser, which I'm not doing here. All of the images here were not denoised in any way. Which means that realistically with a good denoiser and some adaptive sampling a lot less samples would be needed for a good looking image.
                 </p>
 
             </section>
