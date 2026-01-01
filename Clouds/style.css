@@ -3,13 +3,12 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background-color: rgb(15, 15, 15);
+    background-color: rgb(20, 20, 20);
     font-family: 'Arial', 'Helvetica', sans-serif;
     font-size: 17px;
     line-height: 1.5;
 
     padding-bottom: 40px;
-    background-image: url('../Background.png');
     background-attachment: fixed;
 }
 
@@ -17,9 +16,7 @@ body {
     padding: 20px;
     text-align: center;
     border: none;
-
-    background-image: url('../Background.png');
-    background-attachment: fixed;
+    background-color: rgb(20, 20, 20);
 }
 
 .back-button a {
@@ -28,8 +25,7 @@ body {
     background-color: #333333;
     color: white;
     text-decoration: none;
-    border: 2px outset #666666;
-    border-radius: 3px;
+    border: 2px solid #666666;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
     font-weight: bold;
@@ -38,7 +34,7 @@ body {
 .back-button a:hover {
     color: white;
     background-color: #444444;
-    border: 2px inset #666666;
+    border: 2px solid #666666;
 }
 
 .container {

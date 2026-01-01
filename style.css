@@ -7,32 +7,30 @@ body{
     padding: 20px;
     font-family: 'Arial', 'Helvetica', sans-serif;
     color: #ffffff;
-    background-image: url('Background.png');
+    background-color: rgb(20, 20, 20);
     background-attachment: fixed;
 }
 
 #main {
-    background-color: #161616;
+    background-color: rgb(15, 15, 15);
     padding: 30px;
     margin-right: 20px;
     flex: 1;
     max-width: 800px;
     line-height: 1.5;
     border: 2px ridge #444444;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.8);
 }
 
 #side {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #161616;
+    background-color: rgb(15, 15, 15);
     padding: 20px;
     width: 250px;
     flex-shrink: 0;
     max-width: calc(100% - 40px);
     border: 2px ridge #444444;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.8);
 }
 
 #side img {
@@ -93,7 +91,7 @@ a:hover {
 }
 
 .post-card {
-    background-color: #1a1a1a;
+    background-color: rgb(15, 15, 15);
     padding: 20px;
     margin-bottom: 25px;
     border: 2px inset #444444;
